@@ -174,6 +174,7 @@ function App() {
         {currentAudio && (
           <div className="flex justify-center py-5">
             <div>
+              <p className="p-4 text-xl text-purple-700">{currentAudio.name}</p>
               <audio
                 controls
                 ref={audioRef}
