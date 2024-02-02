@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { openDB } from "idb";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { GrResume } from "react-icons/gr";
 
 const dbPromise = openDB("audio-files", 1, {
   upgrade(db) {
@@ -18,6 +20,7 @@ const addAudio = async (file) => {
     alert("upload error" + e);
   }
 };
+
 const getAllAudios = async () => {
   const db = await dbPromise;
   const transaction = db.transaction("audios", "readonly");
@@ -76,9 +79,29 @@ function App() {
     setCurrentTime(0);
     setCurrentAudio(audios[index]);
     localStorage.setItem("playingMp3", JSON.stringify(index));
-    localStorage.setItem("playTime", JSON.stringify(currentTime));
+    localStorage.setItem("playTime", JSON.stringify(0));
     if (audioRef.current) {
       audioRef.current.load();
+    }
+  };
+  const deleteAudio = async (fileName, index) => {
+    try {
+      const db = await dbPromise;
+      const transaction = db.transaction("audios", "readwrite");
+      const store = transaction.objectStore("audios");
+      const key = await store.getKey(fileName);
+      if (key) {
+        if (currentAudio.name === fileName) {
+          setCurrentAudio(null);
+          setPlayTime(0);
+        }
+        getAllAudios().then(setAudios);
+        await store.delete(key);
+      } else {
+        alert("Music file not found.");
+      }
+    } catch (error) {
+      alert("Error deleting music file:", error);
     }
   };
   const handleAudioEnd = () => {
@@ -89,7 +112,7 @@ function App() {
       localStorage.setItem("playTime", JSON.stringify(0));
       if (audioRef.current && index === 0) {
         audioRef.current.load();
-        audioRef.current.play();
+        audioRef.current.paly();
       }
     } else {
       setIndex(index + 1);
@@ -129,14 +152,18 @@ function App() {
           <ul className="">
             {audios.map((audio, index) => (
               <li
+                className="p-2 border-2 my-2 btn hover:bg-slate-200 text-sm md:text-base flex justify-between"
                 key={audio.name}
-                className="p-2 border-2 my-2 btn hover:bg-slate-300 text-sm md:text-base"
               >
                 <button onClick={() => handleAudioChange(index)} className="">
-                  <p className="whitespace-nowrap overflow-hidden text-ellipsis">
+                  <p className="whitespace-nowrap overflow-hidden text-ellipsis pr-2">
                     {index} - {audio.name}
                   </p>
                 </button>
+                <RiDeleteBinLine
+                  className="text-xl hover:text-rose-700"
+                  onClick={() => deleteAudio(audio.name, index)}
+                />
               </li>
             ))}
           </ul>
@@ -162,12 +189,10 @@ function App() {
               <div
                 className={`${
                   playTime === 0 ? "hidden" : "block"
-                } absolute mx-5 -mt-10 ${hide && "hidden"} `}
+                } absolute mx-5 -mt-9 ${hide && "hidden"} `}
                 onClick={hidePlay}
               >
-                <button onClick={playAtTime} className="bg-slate-300 ">
-                  Re
-                </button>
+                <GrResume onClick={playAtTime} className="text-xl bg-white" />
               </div>
             </div>
           </div>
