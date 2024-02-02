@@ -110,10 +110,10 @@ function App() {
     setHide(true);
   };
   return (
-    <div className=" w-screen h-screen p-8 flex justify-between main">
-      <div className="w-1/2 p-2 text-center section">
-        <h1 className="p-5 text-4xl font-semibold">Music List</h1>
-        <div className="p-5">
+    <div className=" w-screen h-screen md:p-8 p-2 flex lg:flex-row flex-col main">
+      <div className="lg:w-1/2 p-2 text-center section">
+        <h1 className="md:p-5 p-2 text-4xl font-semibold">Music List</h1>
+        <div className="md:p-5 p-2">
           <div>
             <input
               type="file"
@@ -125,23 +125,25 @@ function App() {
             </button>
           </div>
         </div>
-        <div className="flex text-start justify-center overflow-y-scroll h-80">
-          <ul>
+        <div className="flex text-start justify-center overflow-y-scroll h-80 no-scrollbar">
+          <ul className="">
             {audios.map((audio, index) => (
               <li
                 key={audio.name}
-                className="p-2 border-2 my-2 btn hover:bg-slate-300"
+                className="p-2 border-2 my-2 btn hover:bg-slate-300 text-sm md:text-base"
               >
                 <button onClick={() => handleAudioChange(index)} className="">
-                  {index} - {audio.name}
+                  <p className="whitespace-nowrap overflow-hidden text-ellipsis">
+                    {index} - {audio.name}
+                  </p>
                 </button>
               </li>
             ))}
           </ul>
         </div>
       </div>
-      <div className="w-1/2 p-2 text-center section">
-        <h1 className="p-5 text-4xl font-semibold">Music Player</h1>
+      <div className="lg:w-1/2 p-2 text-center section">
+        <h1 className="md:p-5 p-2 text-4xl font-semibold">Music Player</h1>
         {currentAudio && (
           <div className="flex justify-center py-5">
             <div>
