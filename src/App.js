@@ -172,28 +172,30 @@ function App() {
       <div className="lg:w-1/2 p-2 text-center section">
         <h1 className="md:p-5 p-2 text-4xl font-semibold">Music Player</h1>
         {currentAudio && (
-          <div className="flex justify-center py-5">
-            <div>
-              <p className="p-4 text-xl text-purple-700">{currentAudio.name}</p>
-              <audio
-                controls
-                ref={audioRef}
-                onTimeUpdate={handleTimeUpdate}
-                onEnded={handleAudioEnd}
-              >
-                <source
-                  src={URL.createObjectURL(currentAudio)}
-                  type="audio/mp3"
-                />
-                Your browser does not support the audio tag.
-              </audio>
-              <div
-                className={`${
-                  playTime === 0 ? "hidden" : "block"
-                } absolute mx-5 -mt-9 ${hide && "hidden"} `}
-                onClick={hidePlay}
-              >
-                <GrResume onClick={playAtTime} className="text-xl bg-white" />
+          <div>
+            <p className="p-4 text-xl text-purple-700">{currentAudio.name}</p>
+            <div className="flex justify-center py-5">
+              <div>
+                <audio
+                  controls
+                  ref={audioRef}
+                  onTimeUpdate={handleTimeUpdate}
+                  onEnded={handleAudioEnd}
+                >
+                  <source
+                    src={URL.createObjectURL(currentAudio)}
+                    type="audio/mp3"
+                  />
+                  Your browser does not support the audio tag.
+                </audio>
+                <div
+                  className={`${
+                    playTime === 0 ? "hidden" : "block"
+                  } absolute mx-5 -mt-9 ${hide && "hidden"} `}
+                  onClick={hidePlay}
+                >
+                  <GrResume onClick={playAtTime} className="text-xl bg-white" />
+                </div>
               </div>
             </div>
           </div>
