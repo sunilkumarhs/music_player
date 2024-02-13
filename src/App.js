@@ -52,9 +52,9 @@ function App() {
   }, []);
 
   useEffect(() => {
-    fetchPlayingMp3().then((index) => {
-      setCurrentAudio(audios[index]);
-      setIndex(index);
+    fetchPlayingMp3().then((play) => {
+      setCurrentAudio(audios[play]);
+      setIndex(play);
     });
   }, [audios]);
 
@@ -91,7 +91,7 @@ function App() {
       const store = transaction.objectStore("audios");
       const key = await store.getKey(fileName);
       if (key) {
-        if (currentAudio.name === fileName) {
+        if (currentAudio !== undefined && currentAudio?.name === fileName) {
           setCurrentAudio(null);
           setPlayTime(0);
         }
@@ -101,7 +101,7 @@ function App() {
         alert("Music file not found.");
       }
     } catch (error) {
-      alert("Error deleting music file:", error);
+      alert("Error deleting music file:" + error);
     }
   };
   const handleAudioEnd = () => {
