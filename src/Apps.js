@@ -10,7 +10,7 @@ function App() {
   const [changePlay, setChangePlay] = useState(false);
 
   return (
-    <div className=" w-screen h-screen md:p-8 p-2 flex lg:flex-row flex-col main">
+    <div className=" w-screen lg:h-screen h-full md:p-8 p-2 flex lg:flex-row flex-col main">
       <MusicPlayer
         currentAudio={currentAudio}
         index={index}

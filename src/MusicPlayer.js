@@ -7,6 +7,13 @@ import Timeline from "wavesurfer.js/dist/plugins/timeline.esm.js";
 import WavesurferPlayer from "@wavesurfer/react";
 import { FaCirclePlay } from "react-icons/fa6";
 import { FaCirclePause } from "react-icons/fa6";
+import { BiSolidSkipNextCircle } from "react-icons/bi";
+import { BiSolidSkipPreviousCircle } from "react-icons/bi";
+// import { TbRepeatOnce } from "react-icons/tb";
+// import { BiSolidPlaylist } from "react-icons/bi";
+import { TbRepeatOff } from "react-icons/tb";
+import { SiMusicbrainz } from "react-icons/si";
+import { TbRepeat } from "react-icons/tb";
 const MusicPlayer = ({
   currentAudio,
   index,
@@ -22,12 +29,14 @@ const MusicPlayer = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [played, setPlayed] = useState(null);
   const [toPlay, setToPlay] = useState(false);
+  const [repeat, setRepeat] = useState(false);
   useEffect(() => {
     currentAudio && setAudio(URL.createObjectURL(currentAudio));
   }, [currentAudio]);
 
   const onReady = (ws) => {
     setWavesurfer(ws);
+    setRepeat(false);
     if ((ws !== played && toPlay === true) || changePlay) {
       setChangePlay(false);
       setToPlay(false);
@@ -66,27 +75,69 @@ const MusicPlayer = ({
     wavesurfer && wavesurfer.playPause();
   }, [wavesurfer, playTime]);
 
+  const handleRepeat = () => {
+    setRepeat(!repeat);
+  };
+
   if (wavesurfer?.media?.ended) {
-    handleAudioEnd().then(() => {
-      setPlayed(wavesurfer);
-      setToPlay(true);
-    });
+    if (repeat === true) {
+      setRepeat(false);
+      wavesurfer.playPause();
+    } else {
+      handleAudioEnd().then(() => {
+        setPlayed(wavesurfer);
+        setToPlay(true);
+      });
+    }
   }
 
+  const handleNext = async () => {
+    if (index !== audios.length - 1) {
+      setCurPlayTime(0).then(
+        fetchPlayingTime().then((data) => setPlayTime(data))
+      );
+      setCurAudio(index + 1).then(
+        fetchPlayingMp3().then((data) => setCurrentAudio(audios[data]))
+      );
+    }
+  };
+
+  const handlePrevious = async () => {
+    if (index !== 0) {
+      setCurPlayTime(0).then(
+        fetchPlayingTime().then((data) => setPlayTime(data))
+      );
+      setCurAudio(index - 1).then(
+        fetchPlayingMp3().then((data) => setCurrentAudio(audios[data]))
+      );
+    }
+  };
+
   return (
-    <div className="lg:w-1/2 p-2 text-center section">
-      <h1 className="md:p-5 p-3 text-4xl font-semibold title">Music Player</h1>
+    <div className={`lg:w-1/2 w-full py-6 text-center section`}>
       <div className="lg:px-8 px-4">
         <div className="border-[1px] border-gray-300 rounded-xl music">
+          <div className="flex justify-center p-2 ">
+            <SiMusicbrainz className="lg:text-9xl text-[14rem] border-[1px] p-1 border-emerald-700 rounded-full player text-cyan-900" />
+          </div>
           {currentAudio && (
-            <p className="p-4 text-2xl text-sky-900 font-semibold">
-              {currentAudio.name}
-            </p>
+            <div className="flex justify-center px-2">
+              <p className="p-2 lg:text-2xl text-4xl text-sky-900 font-semibold whitespace-nowrap overflow-hidden text-ellipsis">
+                {currentAudio.name}
+              </p>
+              <button onClick={handleRepeat}>
+                {repeat ? (
+                  <TbRepeat className="lg:text-3xl text-4xl text-sky-900 hover:text-sky-700" />
+                ) : (
+                  <TbRepeatOff className="lg:text-3xl text-4xl text-sky-900 hover:text-sky-700" />
+                )}
+              </button>
+            </div>
           )}
           <div className="md:px-2 px-1 py-4">
             <WavesurferPlayer
-              height={100}
-              waveColor="black"
+              height={120}
+              waveColor="skyblue"
               responsive={true}
               barWidth={2}
               barHeight={1}
@@ -100,15 +151,53 @@ const MusicPlayer = ({
             />
           </div>
           <div className="flex justify-center py-5">
-            <div>
-              <button className="text-6xl" onClick={onPlayPause} type="button">
-                <div className="">
-                  {isPlaying ? (
-                    <FaCirclePause className="text-cyan-700" />
-                  ) : (
-                    <FaCirclePlay className="text-cyan-700" />
-                  )}
-                </div>
+            <div className="flex">
+              <button
+                className="lg:text-6xl md:text-8xl text-6xl px-2"
+                type="button"
+                onClick={() =>
+                  handlePrevious().then(() => {
+                    setPlayed(wavesurfer);
+                    setToPlay(true);
+                  })
+                }
+              >
+                <BiSolidSkipPreviousCircle
+                  className={` ${
+                    index === 0
+                      ? "text-cyan-700"
+                      : " text-cyan-900 hover:text-cyan-700"
+                  }`}
+                />
+              </button>
+              <button
+                className="lg:text-6xl md:text-8xl text-6xl"
+                onClick={onPlayPause}
+                type="button"
+              >
+                {isPlaying ? (
+                  <FaCirclePause className="text-cyan-900 hover:text-cyan-700" />
+                ) : (
+                  <FaCirclePlay className="text-cyan-900 hover:text-cyan-700" />
+                )}
+              </button>
+              <button
+                className="lg:text-6xl md:text-8xl text-6xl px-2"
+                type="button"
+                onClick={() =>
+                  handleNext().then(() => {
+                    setPlayed(wavesurfer);
+                    setToPlay(true);
+                  })
+                }
+              >
+                <BiSolidSkipNextCircle
+                  className={` ${
+                    index === audios.length - 1
+                      ? "text-cyan-700"
+                      : " text-cyan-900 hover:text-cyan-700"
+                  }`}
+                />
               </button>
             </div>
           </div>

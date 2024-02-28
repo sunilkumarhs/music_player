@@ -16,9 +16,8 @@
     }
 }
 
-.btn {
+.btn1 {
     color: #444;
-    /* background: none; */
     border: none;
     font-family: inherit;
     text-transform: uppercase;
@@ -26,11 +25,23 @@
     font-weight: 400;
     transition: all 0.2s;
   
-    background-color: white;
     background-image: linear-gradient(to right, rgb(32,178,170), rgb(193, 206, 206));
     backdrop-filter: blur(10px);
+    border-radius: 50rem;
+    box-shadow: 0 1.75rem 3.5rem rgba(0, 0, 0, 0.1);
+  }
+
+  .btn2 {
+    color: #444;
+    border: none;
+    font-family: inherit;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-weight: 400;
+    transition: all 0.2s;
   
-    padding: 0.7rem 2.5rem;
+    background-image: linear-gradient(to right, rgb(237, 197, 34), rgb(226, 79, 21));
+    backdrop-filter: blur(10px);
     border-radius: 50rem;
     box-shadow: 0 1.75rem 3.5rem rgba(0, 0, 0, 0.1);
   }
@@ -46,6 +57,10 @@
   }
    .music {
     background-image: linear-gradient(to right, rgb(32,178,170), rgb(193, 206, 206));
+   }
+
+   .player {
+    background-image: linear-gradient(to right, rgb(82, 177, 218), rgb(215, 72, 72));
    }
 
   h1{
