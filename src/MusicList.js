@@ -16,6 +16,8 @@ const MusicList = ({
   audios,
   setAudios,
   setChangePlay,
+  index,
+  wavesurfer,
 }) => {
   useEffect(() => {
     fecthAudioFiles().then((data) => setAudios(data));
@@ -52,6 +54,20 @@ const MusicList = ({
     );
   };
 
+  const handleDelete = (audio, delIndex, currentAudio) => {
+    if (wavesurfer.media.paused === false && currentAudio.name !== audio.name) {
+      setChangePlay(true);
+    }
+    DeleteAudio(audio, currentAudio).then(
+      fecthAudioFiles().then((data) => {
+        setAudios(data);
+        if (index > delIndex) {
+          setCurAudio(index - 1);
+        }
+      })
+    );
+  };
+
   return (
     <div className="lg:w-1/2 w-full  px-2 py-5 text-center section">
       <h1 className="md:p-5 p-2 lg:text-5xl md:text-9xl max-md:text-6xl font-semibold title">
@@ -85,11 +101,7 @@ const MusicList = ({
               </button>
               <RiDeleteBinLine
                 className="lg:text-xl md:text-3xl text-xl hover:text-rose-700 text-sky-900"
-                onClick={() =>
-                  DeleteAudio(audio.name, index, currentAudio).then(
-                    fecthAudioFiles().then((data) => setAudios(data))
-                  )
-                }
+                onClick={() => handleDelete(audio.name, index, currentAudio)}
               />
             </li>
           ))}

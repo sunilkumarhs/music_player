@@ -8,6 +8,7 @@ function App() {
   const [playTime, setPlayTime] = useState(0);
   const [index, setIndex] = useState(0);
   const [changePlay, setChangePlay] = useState(false);
+  const [wavesurfer, setWavesurfer] = useState(null);
 
   return (
     <div className=" w-screen lg:h-screen h-full md:p-8 p-2 flex lg:flex-row flex-col main">
@@ -20,6 +21,8 @@ function App() {
         setCurrentAudio={setCurrentAudio}
         changePlay={changePlay}
         setChangePlay={setChangePlay}
+        wavesurfer={wavesurfer}
+        setWavesurfer={setWavesurfer}
       />
       <MusicList
         currentAudio={currentAudio}
@@ -29,6 +32,8 @@ function App() {
         audios={audios}
         setAudios={setAudios}
         setChangePlay={setChangePlay}
+        index={index}
+        wavesurfer={wavesurfer}
       />
     </div>
   );

@@ -23,9 +23,11 @@ const MusicPlayer = ({
   setCurrentAudio,
   changePlay,
   setChangePlay,
+  wavesurfer,
+  setWavesurfer,
 }) => {
   const [audio, setAudio] = useState(null);
-  const [wavesurfer, setWavesurfer] = useState(null);
+
   const [isPlaying, setIsPlaying] = useState(false);
   const [played, setPlayed] = useState(null);
   const [toPlay, setToPlay] = useState(false);
@@ -40,6 +42,7 @@ const MusicPlayer = ({
     if ((ws !== played && toPlay === true) || changePlay) {
       setChangePlay(false);
       setToPlay(false);
+      ws.media.currentTime = playTime;
       ws.play();
     }
   };
